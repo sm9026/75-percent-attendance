@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Subtle dark circular track in the 90-degree gap -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,33 A21,21 0 1,1 53.99,33"
+        android:strokeWidth="6"
+        android:strokeColor="#1C263B"
+        android:strokeLineCap="butt" />
+    <!-- 270-degree (three-quarter) circular ring with 90-degree gap in top-left quadrant -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,33 A21,21 0 1,1 33,54"
+        android:strokeWidth="6"
+        android:strokeColor="#1EE6A8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

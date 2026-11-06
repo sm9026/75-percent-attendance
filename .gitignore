@@ -1,0 +1,38 @@
+﻿# Gradle and Kotlin generated files
+.gradle/
+.kotlin/
+**/build/
+
+# Keep the actual Gradle wrapper JAR
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local Android SDK configuration
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Generated Android packages
+*.apk
+*.aab
+*.dex
+
+# Native build output
+.externalNativeBuild/
+.cxx/
+
+# Signing credentials — NEVER commit these
+*.jks
+*.keystore
+*.p12
+*.pem
+.signing/
+
+# Gradle wrapper repair backup
+gradle/wrapper/*.broken-backup
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db

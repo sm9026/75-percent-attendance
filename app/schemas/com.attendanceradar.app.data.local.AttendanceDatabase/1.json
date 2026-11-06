@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a9d74c8e21b54f0392c46e81b20a9f1d",
+    "entities": [
+      {
+        "tableName": "semesters",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`semesterId` TEXT NOT NULL, `name` TEXT NOT NULL, `academicYearLabel` TEXT, `startDate` TEXT NOT NULL, `endDate` TEXT, `defaultTargetBp` INTEGER NOT NULL, `status` TEXT NOT NULL, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`semesterId`))",
+        "fields": [
+          {"fieldPath": "semesterId", "columnName": "semesterId", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "name", "columnName": "name", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "academicYearLabel", "columnName": "academicYearLabel", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "startDate", "columnName": "startDate", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "endDate", "columnName": "endDate", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "defaultTargetBp", "columnName": "defaultTargetBp", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "status", "columnName": "status", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "createdAtEpochMs", "columnName": "createdAtEpochMs", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "updatedAtEpochMs", "columnName": "updatedAtEpochMs", "affinity": "INTEGER", "notNull": true}
+        ],
+        "primaryKey": {"autoGenerate": false, "columnNames": ["semesterId"]},
+        "indices": [
+          {"name": "index_semesters_status", "unique": false, "columnNames": ["status"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_semesters_status` ON `${TABLE_NAME}` (`status`)"}
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "subjects",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subjectId` TEXT NOT NULL, `semesterId` TEXT NOT NULL, `name` TEXT NOT NULL, `code` TEXT, `shortName` TEXT, `targetOverrideBp` INTEGER, `colorHex` TEXT NOT NULL, `isArchived` INTEGER NOT NULL, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`subjectId`), FOREIGN KEY(`semesterId`) REFERENCES `semesters`(`semesterId`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {"fieldPath": "subjectId", "columnName": "subjectId", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "semesterId", "columnName": "semesterId", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "name", "columnName": "name", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "code", "columnName": "code", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "shortName", "columnName": "shortName", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "targetOverrideBp", "columnName": "targetOverrideBp", "affinity": "INTEGER", "notNull": false},
+          {"fieldPath": "colorHex", "columnName": "colorHex", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "isArchived", "columnName": "isArchived", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "createdAtEpochMs", "columnName": "createdAtEpochMs", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "updatedAtEpochMs", "columnName": "updatedAtEpochMs", "affinity": "INTEGER", "notNull": true}
+        ],
+        "primaryKey": {"autoGenerate": false, "columnNames": ["subjectId"]},
+        "indices": [
+          {"name": "index_subjects_semesterId", "unique": false, "columnNames": ["semesterId"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_subjects_semesterId` ON `${TABLE_NAME}` (`semesterId`)"},
+          {"name": "index_subjects_semesterId_isArchived", "unique": false, "columnNames": ["semesterId", "isArchived"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_subjects_semesterId_isArchived` ON `${TABLE_NAME}` (`semesterId`, `isArchived`)"}
+        ],
+        "foreignKeys": [
+          {"table": "semesters", "onDelete": "RESTRICT", "onUpdate": "NO ACTION", "columns": ["semesterId"], "referencedColumns": ["semesterId"]}
+        ]
+      },
+      {
+        "tableName": "attendance_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recordId` TEXT NOT NULL, `subjectId` TEXT NOT NULL, `classDate` TEXT NOT NULL, `periodCount` INTEGER NOT NULL, `status` TEXT NOT NULL, `sessionLabel` TEXT, `notes` TEXT, `createdAtEpochMs` INTEGER NOT NULL, `updatedAtEpochMs` INTEGER NOT NULL, PRIMARY KEY(`recordId`), FOREIGN KEY(`subjectId`) REFERENCES `subjects`(`subjectId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {"fieldPath": "recordId", "columnName": "recordId", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "subjectId", "columnName": "subjectId", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "classDate", "columnName": "classDate", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "periodCount", "columnName": "periodCount", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "status", "columnName": "status", "affinity": "TEXT", "notNull": true},
+          {"fieldPath": "sessionLabel", "columnName": "sessionLabel", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "notes", "columnName": "notes", "affinity": "TEXT", "notNull": false},
+          {"fieldPath": "createdAtEpochMs", "columnName": "createdAtEpochMs", "affinity": "INTEGER", "notNull": true},
+          {"fieldPath": "updatedAtEpochMs", "columnName": "updatedAtEpochMs", "affinity": "INTEGER", "notNull": true}
+        ],
+        "primaryKey": {"autoGenerate": false, "columnNames": ["recordId"]},
+        "indices": [
+          {"name": "index_attendance_records_subjectId", "unique": false, "columnNames": ["subjectId"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_attendance_records_subjectId` ON `${TABLE_NAME}` (`subjectId`)"},
+          {"name": "index_attendance_records_classDate", "unique": false, "columnNames": ["classDate"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_attendance_records_classDate` ON `${TABLE_NAME}` (`classDate`)"},
+          {"name": "index_attendance_records_subjectId_classDate", "unique": false, "columnNames": ["subjectId", "classDate"], "orders": [], "createSql": "CREATE INDEX IF NOT EXISTS `index_attendance_records_subjectId_classDate` ON `${TABLE_NAME}` (`subjectId`, `classDate`)"}
+        ],
+        "foreignKeys": [
+          {"table": "subjects", "onDelete": "CASCADE", "onUpdate": "NO ACTION", "columns": ["subjectId"], "referencedColumns": ["subjectId"]}
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9d74c8e21b54f0392c46e81b20a9f1d')"
+    ]
+  }
+}
