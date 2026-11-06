@@ -36,3 +36,6 @@ gradle/wrapper/*.broken-backup
 *.log
 .DS_Store
 Thumbs.db
+
+# Local release signing configuration
+keystore.properties

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,29 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
+
+// Load local release signing credentials (never committed to Git).
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.isFile) {
+    keystorePropertiesFile.inputStream().use {
+        keystoreProperties.load(it)
+    }
+}
+
+val requiredSigningProperties = listOf(
+    "storeFile",
+    "storePassword",
+    "keyAlias",
+    "keyPassword"
+)
+
+val hasReleaseSigning = keystorePropertiesFile.isFile &&
+    requiredSigningProperties.all {
+        !keystoreProperties.getProperty(it).isNullOrBlank()
+    } &&
+    keystoreProperties.getProperty("storeFile")?.let { file(it).isFile } == true
 
 android {
     namespace = "com.attendanceradar.app"
@@ -23,8 +48,22 @@ android {
         }
     }
 
+	    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(keystoreProperties.getProperty("storeFile")!!)
+                storePassword = keystoreProperties.getProperty("storePassword")!!
+                keyAlias = keystoreProperties.getProperty("keyAlias")!!
+                keyPassword = keystoreProperties.getProperty("keyPassword")!!
+            }
+        }
+    }
+
     buildTypes {
         release {
+	    if (hasReleaseSigning) {
+            signingConfig = signingConfigs.getByName("release")
+}
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
